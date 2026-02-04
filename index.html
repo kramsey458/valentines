@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Be My Valentine</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --pink: #ff7eb6;
+      --pink-dark: #ff4f95;
+      --red: #ff4d6d;
+      --peach: #ffd6e8;
+      --cream: #fff5f7;
+      --text: #5c2a4a;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: "Trebuchet MS", "Segoe UI", sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      background: radial-gradient(circle at top, #fff, var(--peach));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 32px 16px;
+      color: var(--text);
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 28px;
+      padding: 36px 32px;
+      max-width: 520px;
+      width: 100%;
+      box-shadow: 0 18px 45px rgba(255, 77, 109, 0.18);
+      text-align: center;
+      border: 3px solid rgba(255, 79, 149, 0.2);
+    }
+
+    .hearts {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 16px;
+      font-size: 24px;
+      animation: float 3s ease-in-out infinite;
+    }
+
+    h1 {
+      font-size: 2rem;
+      line-height: 1.3;
+      margin-bottom: 12px;
+    }
+
+    p {
+      font-size: 1.05rem;
+      margin-bottom: 24px;
+    }
+
+    .buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      justify-content: center;
+    }
+
+    button {
+      border: none;
+      border-radius: 999px;
+      padding: 12px 28px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+    }
+
+    .yes {
+      background: linear-gradient(135deg, var(--pink), var(--red));
+      color: #fff;
+      box-shadow: 0 12px 20px rgba(255, 79, 149, 0.35);
+    }
+
+    .yes:hover {
+      transform: translateY(-2px) scale(1.02);
+      box-shadow: 0 16px 25px rgba(255, 79, 149, 0.4);
+    }
+
+    .no {
+      background: var(--cream);
+      color: var(--text);
+      border: 2px dashed rgba(255, 79, 149, 0.4);
+    }
+
+    .no:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 8px 15px rgba(92, 42, 74, 0.1);
+    }
+
+    .message {
+      margin-top: 24px;
+      background: #fff0f6;
+      padding: 16px 20px;
+      border-radius: 18px;
+      font-weight: 600;
+      display: none;
+    }
+
+    .message.show {
+      display: inline-block;
+      animation: pop 0.4s ease;
+    }
+
+    .note {
+      margin-top: 18px;
+      font-size: 0.9rem;
+      color: #9a5b7d;
+    }
+
+    @keyframes float {
+      0%, 100% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(-6px);
+      }
+    }
+
+    @keyframes pop {
+      0% {
+        transform: scale(0.8);
+        opacity: 0.5;
+      }
+      100% {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="card">
+    <div class="hearts">💖 💘 💝</div>
+    <h1>Will you be my Valentine, Sarah?</h1>
+    <p>I have a little extra love saved just for you.</p>
+
+    <div class="buttons">
+      <button class="yes" type="button">Yes!</button>
+      <button class="no" type="button">No</button>
+    </div>
+
+    <div class="message" id="message"></div>
+    <div class="note">(Tip: the “No” button is just a tiny bit shy.)</div>
+  </main>
+
+  <script>
+    const yesButton = document.querySelector(".yes");
+    const noButton = document.querySelector(".no");
+    const message = document.getElementById("message");
+
+    const yesMessages = [
+      "Yay! Best. Valentine. Ever! 💞",
+      "You just made my heart do a happy dance! 🥰",
+      "It’s a date! I’ll bring the chocolates. 🍫"
+    ];
+
+    const noMessages = [
+      "Are you sure? I saved you the biggest heart! 💗",
+      "How about a maybe? 🥺",
+      "I’ll ask again with extra flowers! 🌸"
+    ];
+
+    yesButton.addEventListener("click", () => {
+      const random = yesMessages[Math.floor(Math.random() * yesMessages.length)];
+      message.textContent = random;
+      message.classList.add("show");
+    });
+
+    noButton.addEventListener("mouseenter", () => {
+      const x = Math.floor(Math.random() * 120) - 60;
+      const y = Math.floor(Math.random() * 80) - 40;
+      noButton.style.transform = `translate(${x}px, ${y}px)`;
+    });
+
+    noButton.addEventListener("click", () => {
+      const random = noMessages[Math.floor(Math.random() * noMessages.length)];
+      message.textContent = random;
+      message.classList.add("show");
+    });
+  </script>
+</body>
+</html>
