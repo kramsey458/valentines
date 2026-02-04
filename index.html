@@ -72,7 +72,8 @@
       min-height: 80px;
     }
 
-    button {
+    .buttons button,
+    .buttons label {
       border: none;
       border-radius: 999px;
       padding: 12px 28px;
@@ -83,6 +84,9 @@
     }
 
     .yes {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
       background: linear-gradient(135deg, var(--pink), var(--red));
       color: #fff;
       box-shadow: 0 12px 20px rgba(255, 79, 149, 0.35);
@@ -108,36 +112,41 @@
       box-shadow: 0 8px 15px rgba(92, 42, 74, 0.1);
     }
 
-    .message {
-      margin-top: 24px;
-      background: #fff0f6;
-      padding: 16px 20px;
-      border-radius: 18px;
-      font-weight: 600;
-      display: none;
-      align-items: center;
-      gap: 16px;
-    }
-
-    .message.show {
-      display: inline-block;
-      animation: pop 0.4s ease;
-    }
-
     .yes-toggle {
       position: absolute;
       opacity: 0;
       pointer-events: none;
     }
 
-    .yes-toggle:checked ~ .message {
-      display: inline-flex;
-      animation: pop 0.4s ease;
+    .screen-celebration {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 16px;
+      background: radial-gradient(circle at center, rgba(255, 255, 255, 0.7), rgba(255, 214, 232, 0.95));
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+      z-index: 10;
+    }
+
+    .yes-toggle:checked ~ .screen-celebration {
+      opacity: 1;
+    }
+
+    .screen-message {
+      font-size: 1.4rem;
+      font-weight: 600;
+      color: var(--text);
+      text-shadow: 0 6px 18px rgba(255, 79, 149, 0.25);
     }
 
     .heart-animation {
-      width: 96px;
-      height: 96px;
+      width: min(60vw, 320px);
+      height: min(60vw, 320px);
       position: relative;
       flex-shrink: 0;
     }
@@ -160,8 +169,8 @@
       transform: scaleY(0);
     }
 
-    .yes-toggle:checked ~ .message .heart-fill {
-      animation: fillUp 1.2s ease forwards;
+    .yes-toggle:checked ~ .screen-celebration .heart-fill {
+      animation: fillUp 1.4s ease forwards;
     }
 
     .sparkles {
@@ -173,8 +182,8 @@
       opacity: 0;
     }
 
-    .yes-toggle:checked ~ .message .sparkles {
-      animation: sparkles 1.1s ease 0.1s forwards;
+    .yes-toggle:checked ~ .screen-celebration .sparkles {
+      animation: sparkles 1.2s ease 0.1s forwards;
     }
 
     .sparkles span {
@@ -204,10 +213,52 @@
       animation-delay: 0.4s;
     }
 
-    .note {
-      margin-top: 18px;
-      font-size: 0.9rem;
-      color: #9a5b7d;
+    .floating-hearts {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      pointer-events: none;
+    }
+
+    .floating-hearts span {
+      position: absolute;
+      font-size: 24px;
+      opacity: 0;
+      animation: floatUp 2.6s ease-in forwards;
+    }
+
+    .yes-toggle:checked ~ .screen-celebration .floating-hearts span {
+      opacity: 1;
+    }
+
+    .floating-hearts span:nth-child(1) {
+      left: 18%;
+      bottom: 10%;
+      animation-delay: 0.1s;
+    }
+
+    .floating-hearts span:nth-child(2) {
+      left: 42%;
+      bottom: 6%;
+      animation-delay: 0.3s;
+    }
+
+    .floating-hearts span:nth-child(3) {
+      left: 70%;
+      bottom: 12%;
+      animation-delay: 0.2s;
+    }
+
+    .floating-hearts span:nth-child(4) {
+      left: 85%;
+      bottom: 16%;
+      animation-delay: 0.4s;
+    }
+
+    .floating-hearts span:nth-child(5) {
+      left: 8%;
+      bottom: 14%;
+      animation-delay: 0.5s;
     }
 
     @keyframes float {
@@ -264,6 +315,20 @@
         transform: translate(0, -12px) scale(1.1);
       }
     }
+
+    @keyframes floatUp {
+      0% {
+        transform: translateY(0) scale(0.8);
+        opacity: 0;
+      }
+      20% {
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(-70vh) scale(1.2);
+        opacity: 0;
+      }
+    }
   </style>
 </head>
 <body>
@@ -277,31 +342,38 @@
       <label class="yes" for="yes-toggle">yes :)</label>
       <button class="no" type="button">no :(</button>
     </div>
-
-    <div class="message" id="message">
-      <div class="heart-animation">
-        <svg viewBox="0 0 120 120" aria-hidden="true">
-          <defs>
-            <linearGradient id="heartGradient" x1="0" x2="0" y1="1" y2="0">
-              <stop offset="0%" stop-color="#ff4d6d" />
-              <stop offset="100%" stop-color="#ff7eb6" />
-            </linearGradient>
-            <clipPath id="heartClip">
-              <path d="M60 104C60 104 20 76 20 46C20 28 35 16 50 16C60 16 66 22 60 30C54 22 60 16 70 16C85 16 100 28 100 46C100 76 60 104 60 104Z" />
-            </clipPath>
-          </defs>
-          <path class="heart-fill" clip-path="url(#heartClip)" d="M60 104C60 104 20 76 20 46C20 28 35 16 50 16C60 16 66 22 60 30C54 22 60 16 70 16C85 16 100 28 100 46C100 76 60 104 60 104Z" />
-          <path class="heart-outline" d="M60 104C60 104 20 76 20 46C20 28 35 16 50 16C60 16 66 22 60 30C54 22 60 16 70 16C85 16 100 28 100 46C100 76 60 104 60 104Z" />
-        </svg>
-        <div class="sparkles" aria-hidden="true">
-          <span>💗</span>
-          <span>💖</span>
-          <span>💘</span>
-          <span>💝</span>
-        </div>
-      </div>
-      <div class="message-text">You filled my heart! 💞</div>
-    </div>
   </main>
+
+  <section class="screen-celebration" aria-hidden="true">
+    <div class="floating-hearts">
+      <span>💗</span>
+      <span>💖</span>
+      <span>💘</span>
+      <span>💝</span>
+      <span>💞</span>
+    </div>
+    <div class="heart-animation">
+      <svg viewBox="0 0 120 120" aria-hidden="true">
+        <defs>
+          <linearGradient id="heartGradient" x1="0" x2="0" y1="1" y2="0">
+            <stop offset="0%" stop-color="#ff4d6d" />
+            <stop offset="100%" stop-color="#ff7eb6" />
+          </linearGradient>
+          <clipPath id="heartClip">
+            <path d="M60 104C60 104 20 76 20 46C20 28 35 16 50 16C60 16 66 22 60 30C54 22 60 16 70 16C85 16 100 28 100 46C100 76 60 104 60 104Z" />
+          </clipPath>
+        </defs>
+        <path class="heart-fill" clip-path="url(#heartClip)" d="M60 104C60 104 20 76 20 46C20 28 35 16 50 16C60 16 66 22 60 30C54 22 60 16 70 16C85 16 100 28 100 46C100 76 60 104 60 104Z" />
+        <path class="heart-outline" d="M60 104C60 104 20 76 20 46C20 28 35 16 50 16C60 16 66 22 60 30C54 22 60 16 70 16C85 16 100 28 100 46C100 76 60 104 60 104Z" />
+      </svg>
+      <div class="sparkles" aria-hidden="true">
+        <span>💗</span>
+        <span>💖</span>
+        <span>💘</span>
+        <span>💝</span>
+      </div>
+    </div>
+    <div class="screen-message">You filled my heart! 💞</div>
+  </section>
 </body>
 </html>
