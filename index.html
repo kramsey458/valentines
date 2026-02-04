@@ -181,11 +181,11 @@
     ];
 
     const chaosSettings = {
-      maxTranslateX: 220,
-      maxTranslateY: 150,
-      minScale: 0.85,
-      maxScale: 1.2,
-      maxRotate: 22
+      maxTranslateX: 140,
+      maxTranslateY: 90,
+      minScale: 0.95,
+      maxScale: 1.05,
+      maxRotate: 10
     };
 
     const moveNoButton = () => {
@@ -203,7 +203,7 @@
       const centerY = rect.top + rect.height / 2;
       const distance = Math.hypot(event.clientX - centerX, event.clientY - centerY);
 
-      if (distance < 140) {
+      if (distance < 90) {
         moveNoButton();
       }
     };
