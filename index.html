@@ -68,6 +68,8 @@
       flex-wrap: wrap;
       gap: 16px;
       justify-content: center;
+      position: relative;
+      min-height: 80px;
     }
 
     button {
@@ -84,6 +86,8 @@
       background: linear-gradient(135deg, var(--pink), var(--red));
       color: #fff;
       box-shadow: 0 12px 20px rgba(255, 79, 149, 0.35);
+      position: relative;
+      z-index: 2;
     }
 
     .yes:hover {
@@ -95,6 +99,8 @@
       background: var(--cream);
       color: var(--text);
       border: 2px dashed rgba(255, 79, 149, 0.4);
+      transition: transform 0.25s ease, box-shadow 0.2s ease;
+      will-change: transform;
     }
 
     .no:hover {
@@ -174,17 +180,58 @@
       "stop you don't actually mean this"
     ];
 
+    const chaosSettings = {
+      maxTranslateX: 140,
+      maxTranslateY: 90,
+      minScale: 0.95,
+      maxScale: 1.05,
+      maxRotate: 10,
+      cooldownMs: 180
+    };
+
+    let lastMoveAt = 0;
+
+    const moveNoButton = () => {
+      const now = Date.now();
+      if (now - lastMoveAt < chaosSettings.cooldownMs) {
+        return;
+      }
+      lastMoveAt = now;
+
+      const x = Math.floor(Math.random() * (chaosSettings.maxTranslateX * 2 + 1)) - chaosSettings.maxTranslateX;
+      const y = Math.floor(Math.random() * (chaosSettings.maxTranslateY * 2 + 1)) - chaosSettings.maxTranslateY;
+      const rotation = (Math.random() * chaosSettings.maxRotate * 2) - chaosSettings.maxRotate;
+      const scale = chaosSettings.minScale + Math.random() * (chaosSettings.maxScale - chaosSettings.minScale);
+
+      noButton.style.transform = `translate(${x}px, ${y}px) rotate(${rotation}deg) scale(${scale})`;
+    };
+
+    const moveAwayFromPointer = (event) => {
+      const rect = noButton.getBoundingClientRect();
+      const centerX = rect.left + rect.width / 2;
+      const centerY = rect.top + rect.height / 2;
+      const distance = Math.hypot(event.clientX - centerX, event.clientY - centerY);
+
+      if (distance < 90) {
+        moveNoButton();
+      }
+    };
+
     yesButton.addEventListener("click", () => {
       const random = yesMessages[Math.floor(Math.random() * yesMessages.length)];
       message.textContent = random;
       message.classList.add("show");
     });
 
-    noButton.addEventListener("mouseenter", () => {
-      const x = Math.floor(Math.random() * 120) - 60;
-      const y = Math.floor(Math.random() * 80) - 40;
-      noButton.style.transform = `translate(${x}px, ${y}px)`;
+    ["mouseenter", "focus", "touchstart", "pointerdown"].forEach((eventName) => {
+      noButton.addEventListener(eventName, (event) => {
+        event.preventDefault();
+        moveNoButton();
+      });
     });
+
+    document.addEventListener("mousemove", moveAwayFromPointer);
+    window.addEventListener("resize", moveNoButton);
 
     noButton.addEventListener("click", () => {
       const random = noMessages[Math.floor(Math.random() * noMessages.length)];
