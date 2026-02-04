@@ -72,7 +72,8 @@
       min-height: 80px;
     }
 
-    button {
+    .buttons button,
+    .buttons label {
       border: none;
       border-radius: 999px;
       padding: 12px 28px;
@@ -83,6 +84,9 @@
     }
 
     .yes {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
       background: linear-gradient(135deg, var(--pink), var(--red));
       color: #fff;
       box-shadow: 0 12px 20px rgba(255, 79, 149, 0.35);
@@ -108,24 +112,153 @@
       box-shadow: 0 8px 15px rgba(92, 42, 74, 0.1);
     }
 
-    .message {
-      margin-top: 24px;
-      background: #fff0f6;
-      padding: 16px 20px;
-      border-radius: 18px;
+    .yes-toggle {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .screen-celebration {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 16px;
+      background: radial-gradient(circle at center, rgba(255, 255, 255, 0.7), rgba(255, 214, 232, 0.95));
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+      z-index: 10;
+    }
+
+    .yes-toggle:checked ~ .screen-celebration {
+      opacity: 1;
+    }
+
+    .screen-message {
+      font-size: 1.4rem;
       font-weight: 600;
-      display: none;
+      color: var(--text);
+      text-shadow: 0 6px 18px rgba(255, 79, 149, 0.25);
     }
 
-    .message.show {
-      display: inline-block;
-      animation: pop 0.4s ease;
+    .heart-animation {
+      width: min(60vw, 320px);
+      height: min(60vw, 320px);
+      position: relative;
+      flex-shrink: 0;
     }
 
-    .note {
-      margin-top: 18px;
-      font-size: 0.9rem;
-      color: #9a5b7d;
+    .heart-animation svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    .heart-outline {
+      fill: none;
+      stroke: var(--pink-dark);
+      stroke-width: 8;
+    }
+
+    .heart-fill {
+      fill: url(#heartGradient);
+      transform-origin: center bottom;
+      transform: scaleY(0);
+    }
+
+    .yes-toggle:checked ~ .screen-celebration .heart-fill {
+      animation: fillUp 1.4s ease forwards;
+    }
+
+    .sparkles {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      pointer-events: none;
+      opacity: 0;
+    }
+
+    .yes-toggle:checked ~ .screen-celebration .sparkles {
+      animation: sparkles 1.2s ease 0.1s forwards;
+    }
+
+    .sparkles span {
+      position: absolute;
+      font-size: 20px;
+      opacity: 0;
+      animation: sparkleFloat 1.2s ease forwards;
+    }
+
+    .sparkles span:nth-child(1) {
+      transform: translate(-36px, -20px);
+      animation-delay: 0.1s;
+    }
+
+    .sparkles span:nth-child(2) {
+      transform: translate(32px, -28px);
+      animation-delay: 0.2s;
+    }
+
+    .sparkles span:nth-child(3) {
+      transform: translate(-24px, 30px);
+      animation-delay: 0.3s;
+    }
+
+    .sparkles span:nth-child(4) {
+      transform: translate(28px, 26px);
+      animation-delay: 0.4s;
+    }
+
+    .floating-hearts {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      pointer-events: none;
+    }
+
+    .floating-hearts span {
+      position: absolute;
+      font-size: 24px;
+      opacity: 0;
+      animation: floatUp 2.6s ease-in forwards;
+    }
+
+    .yes-toggle:checked ~ .screen-celebration .floating-hearts span {
+      opacity: 1;
+    }
+
+    .floating-hearts span:nth-child(1) {
+      left: 18%;
+      bottom: 10%;
+      animation-delay: 0.1s;
+    }
+
+    .floating-hearts span:nth-child(2) {
+      left: 42%;
+      bottom: 6%;
+      animation-delay: 0.3s;
+    }
+
+    .floating-hearts span:nth-child(3) {
+      left: 70%;
+      bottom: 12%;
+      animation-delay: 0.2s;
+    }
+
+    .floating-hearts span:nth-child(4) {
+      left: 85%;
+      bottom: 16%;
+      animation-delay: 0.4s;
+    }
+
+    .floating-hearts span:nth-child(5) {
+      left: 8%;
+      bottom: 14%;
+      animation-delay: 0.5s;
     }
 
     @keyframes float {
@@ -147,6 +280,55 @@
         opacity: 1;
       }
     }
+
+    @keyframes fillUp {
+      0% {
+        transform: scaleY(0);
+      }
+      60% {
+        transform: scaleY(1.05);
+      }
+      100% {
+        transform: scaleY(1);
+      }
+    }
+
+    @keyframes sparkles {
+      0% {
+        opacity: 0;
+      }
+      100% {
+        opacity: 1;
+      }
+    }
+
+    @keyframes sparkleFloat {
+      0% {
+        opacity: 0;
+        transform: translate(0, 0) scale(0.6);
+      }
+      60% {
+        opacity: 1;
+      }
+      100% {
+        opacity: 0;
+        transform: translate(0, -12px) scale(1.1);
+      }
+    }
+
+    @keyframes floatUp {
+      0% {
+        transform: translateY(0) scale(0.8);
+        opacity: 0;
+      }
+      20% {
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(-70vh) scale(1.2);
+        opacity: 0;
+      }
+    }
   </style>
 </head>
 <body>
@@ -155,89 +337,43 @@
     <h1>Will you be my Valentine, Sarah?</h1>
     <p>pls pls pls</p>
 
+    <input class="yes-toggle" type="checkbox" id="yes-toggle" />
     <div class="buttons">
-      <button class="yes" type="button">yes :)</button>
+      <label class="yes" for="yes-toggle">yes :)</label>
       <button class="no" type="button">no :(</button>
     </div>
-
-    <div class="message" id="message"></div>
   </main>
 
-  <script>
-    const yesButton = document.querySelector(".yes");
-    const noButton = document.querySelector(".no");
-    const message = document.getElementById("message");
-
-    const yesMessages = [
-      "i love you so much sarawr xD",
-      "i shake my butt excitedly in a happy dance because i love you so much",
-      "i love you and your spoon hands"
-    ];
-
-    const noMessages = [
-      "do you even like me?",
-      "i will tickle you for clicking this",
-      "stop you don't actually mean this"
-    ];
-
-    const chaosSettings = {
-      maxTranslateX: 140,
-      maxTranslateY: 90,
-      minScale: 0.95,
-      maxScale: 1.05,
-      maxRotate: 10,
-      cooldownMs: 180
-    };
-
-    let lastMoveAt = 0;
-
-    const moveNoButton = () => {
-      const now = Date.now();
-      if (now - lastMoveAt < chaosSettings.cooldownMs) {
-        return;
-      }
-      lastMoveAt = now;
-
-      const x = Math.floor(Math.random() * (chaosSettings.maxTranslateX * 2 + 1)) - chaosSettings.maxTranslateX;
-      const y = Math.floor(Math.random() * (chaosSettings.maxTranslateY * 2 + 1)) - chaosSettings.maxTranslateY;
-      const rotation = (Math.random() * chaosSettings.maxRotate * 2) - chaosSettings.maxRotate;
-      const scale = chaosSettings.minScale + Math.random() * (chaosSettings.maxScale - chaosSettings.minScale);
-
-      noButton.style.transform = `translate(${x}px, ${y}px) rotate(${rotation}deg) scale(${scale})`;
-    };
-
-    const moveAwayFromPointer = (event) => {
-      const rect = noButton.getBoundingClientRect();
-      const centerX = rect.left + rect.width / 2;
-      const centerY = rect.top + rect.height / 2;
-      const distance = Math.hypot(event.clientX - centerX, event.clientY - centerY);
-
-      if (distance < 90) {
-        moveNoButton();
-      }
-    };
-
-    yesButton.addEventListener("click", () => {
-      const random = yesMessages[Math.floor(Math.random() * yesMessages.length)];
-      message.textContent = random;
-      message.classList.add("show");
-    });
-
-    ["mouseenter", "focus", "touchstart", "pointerdown"].forEach((eventName) => {
-      noButton.addEventListener(eventName, (event) => {
-        event.preventDefault();
-        moveNoButton();
-      });
-    });
-
-    document.addEventListener("mousemove", moveAwayFromPointer);
-    window.addEventListener("resize", moveNoButton);
-
-    noButton.addEventListener("click", () => {
-      const random = noMessages[Math.floor(Math.random() * noMessages.length)];
-      message.textContent = random;
-      message.classList.add("show");
-    });
-  </script>
+  <section class="screen-celebration" aria-hidden="true">
+    <div class="floating-hearts">
+      <span>💗</span>
+      <span>💖</span>
+      <span>💘</span>
+      <span>💝</span>
+      <span>💞</span>
+    </div>
+    <div class="heart-animation">
+      <svg viewBox="0 0 120 120" aria-hidden="true">
+        <defs>
+          <linearGradient id="heartGradient" x1="0" x2="0" y1="1" y2="0">
+            <stop offset="0%" stop-color="#ff4d6d" />
+            <stop offset="100%" stop-color="#ff7eb6" />
+          </linearGradient>
+          <clipPath id="heartClip">
+            <path d="M60 104C60 104 20 76 20 46C20 28 35 16 50 16C60 16 66 22 60 30C54 22 60 16 70 16C85 16 100 28 100 46C100 76 60 104 60 104Z" />
+          </clipPath>
+        </defs>
+        <path class="heart-fill" clip-path="url(#heartClip)" d="M60 104C60 104 20 76 20 46C20 28 35 16 50 16C60 16 66 22 60 30C54 22 60 16 70 16C85 16 100 28 100 46C100 76 60 104 60 104Z" />
+        <path class="heart-outline" d="M60 104C60 104 20 76 20 46C20 28 35 16 50 16C60 16 66 22 60 30C54 22 60 16 70 16C85 16 100 28 100 46C100 76 60 104 60 104Z" />
+      </svg>
+      <div class="sparkles" aria-hidden="true">
+        <span>💗</span>
+        <span>💖</span>
+        <span>💘</span>
+        <span>💝</span>
+      </div>
+    </div>
+    <div class="screen-message">You filled my heart! 💞</div>
+  </section>
 </body>
 </html>
