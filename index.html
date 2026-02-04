@@ -99,7 +99,7 @@
       background: var(--cream);
       color: var(--text);
       border: 2px dashed rgba(255, 79, 149, 0.4);
-      transition: transform 0.1s ease, box-shadow 0.2s ease;
+      transition: transform 0.25s ease, box-shadow 0.2s ease;
       will-change: transform;
     }
 
@@ -185,10 +185,19 @@
       maxTranslateY: 90,
       minScale: 0.95,
       maxScale: 1.05,
-      maxRotate: 10
+      maxRotate: 10,
+      cooldownMs: 180
     };
 
+    let lastMoveAt = 0;
+
     const moveNoButton = () => {
+      const now = Date.now();
+      if (now - lastMoveAt < chaosSettings.cooldownMs) {
+        return;
+      }
+      lastMoveAt = now;
+
       const x = Math.floor(Math.random() * (chaosSettings.maxTranslateX * 2 + 1)) - chaosSettings.maxTranslateX;
       const y = Math.floor(Math.random() * (chaosSettings.maxTranslateY * 2 + 1)) - chaosSettings.maxTranslateY;
       const rotation = (Math.random() * chaosSettings.maxRotate * 2) - chaosSettings.maxRotate;
